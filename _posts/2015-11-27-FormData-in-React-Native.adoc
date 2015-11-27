@@ -1,0 +1,49 @@
+# FormData in React Native
+
+:hp-tags: react, react-native, formdata
+
+There are 2 things that I actually don't know unread read FormData implementation.
+
+## Image uploading
+Yes, you can upload images! I used link:https://github.com/booxood/react-native-file-upload:[react-native-file-upload] until discovered how to use FormData in this case.
+
+link:https://developer.mozilla.org/en-US/docs/Web/API/FormData:[Using FormData in browser] in very simple. For example, we have an `input`. So we need just append `File` object to FormData.
+
+[source,javascript]
+----
+formData.append('username', 'Aleksei');
+formData.append('userpic', myFileInput.files[0], 'doochik.jpg')
+
+----
+
+There is no `File` object or `Blob` in React Native. `ImagePicker` or `CameraRoll` gives us only file url, e.g., `\file://path/to/image.jpg`.
+
+The solution is to add special object with `uri` property as described in link:https://github.com/facebook/react-native/blob/56fef9b6225ffc1ba87f784660eebe842866c57d/Libraries/Network/FormData.js#L34:[JSDoc]
+
+[source,javascript]
+----
+var photo = {
+	uri: uriFromCameraRoll,
+	type: 'image/jpeg',
+	name: 'photo.jpg',
+};
+
+var body = new FormData();
+body.append('photo', photo);
+body.append('title', 'A beautiful photo!')
+----
+
+## Field value must be string
+I think this is actually the bug at link:https://github.com/facebook/react-native/blob/56fef9b6225ffc1ba87f784660eebe842866c57d/Libraries/Network/FormData.js#L68:[this place].
+
+Example
+[source,javascript]
+----
+var fd = FormData();
+
+fd.append('foo', 'bar'); // works
+fd.append('image', {uri: 'file:///'}); // works
+
+fd.append('number', 1); // EXCEPTION
+fd.append('boolean', true); // EXCEPTION
+----
