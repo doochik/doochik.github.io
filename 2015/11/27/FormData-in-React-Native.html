@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>FormData in React Native</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//doochik.com/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//doochik.com/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="http://doochik.com/2015/11/27/FormData-in-React-Native.html" />
+    
+    <meta property="og:site_name" content="Aleksei Androsov" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="FormData in React Native" />
+    <meta property="og:description" content="There are 2 things that I actually don&amp;#8217;t know unread read FormData implementation. Image uploading Yes, you can upload images! I used react-native-file-upload until discovered how to use FormData in this case. Using FormData in browser in very..." />
+    <meta property="og:url" content="http://doochik.com/2015/11/27/FormData-in-React-Native.html" />
+    <meta property="article:published_time" content="2015-11-26T21:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-11-27T16:44:33.171Z" />
+    <meta property="article:tag" content="react" />
+    <meta property="article:tag" content="react-native" />
+    <meta property="article:tag" content="formdata" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="FormData in React Native" />
+    <meta name="twitter:description" content="There are 2 things that I actually don&amp;#8217;t know unread read FormData implementation. Image uploading Yes, you can upload images! I used react-native-file-upload until discovered how to use FormData in this case. Using FormData in browser in very..." />
+    <meta name="twitter:url" content="http://doochik.com/2015/11/27/FormData-in-React-Native.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "Aleksei Androsov",
+    "author": {
+        "@type": "Person",
+        "name": "Aleksei Androsov",
+        "image": "https://avatars.githubusercontent.com/u/31961?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": null
+    },
+    "headline": "FormData in React Native",
+    "url": "http://doochik.com/2015/11/27/FormData-in-React-Native.html",
+    "datePublished": "2015-11-26T21:00:00.000Z",
+    "dateModified": "2015-11-27T16:44:33.171Z",
+    "keywords": "react,  react-native,  formdata",
+    "description": "There are 2 things that I actually don&amp;#8217;t know unread read FormData implementation. Image uploading Yes, you can upload images! I used react-native-file-upload until discovered how to use FormData in this case. Using FormData in browser in very..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="Aleksei Androsov" href="http://doochik.com/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template tag-react tag-react-native tag-formdata">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="http://doochik.com">Home</a>
+        <!-- <a class="subscribe-button icon-feed" href="http://doochik.com/rss/">Subscribe</a> -->
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post tag-react tag-react-native tag-formdata">
+
+        <header class="post-header">
+            <h1 class="post-title">FormData in React Native</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-11-27">27 November 2015</time>  on <a href="http://doochik.com/tag/react">react</a>, <a href="http://doochik.com/tag/react-native"> react-native</a>, <a href="http://doochik.com/tag/formdata"> formdata</a>
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are 2 things that I actually don&#8217;t know unread read FormData implementation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_image_uploading">Image uploading</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Yes, you can upload images! I used <a href="https://github.com/booxood/react-native-file-upload:">react-native-file-upload</a> until discovered how to use FormData in this case.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FormData:">Using FormData in browser</a> in very simple. For example, we have an <code>input</code>. So we need just append <code>File</code> object to FormData.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">formData.append('username', 'Aleksei');
+formData.append('userpic', myFileInput.files[0], 'doochik.jpg')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is no <code>File</code> object or <code>Blob</code> in React Native. <code>ImagePicker</code> or <code>CameraRoll</code> gives us only file url, e.g., <code>file://path/to/image.jpg</code>.</p>
+</div>
+<div class="paragraph">
+<p>The solution is to add special object with <code>uri</code> property as described in <a href="https://github.com/facebook/react-native/blob/56fef9b6225ffc1ba87f784660eebe842866c57d/Libraries/Network/FormData.js#L34:">JSDoc</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">var photo = {
+	uri: uriFromCameraRoll,
+	type: 'image/jpeg',
+	name: 'photo.jpg',
+};
+
+var body = new FormData();
+body.append('photo', photo);
+body.append('title', 'A beautiful photo!')</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_field_value_must_be_string">Field value must be string</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I think this is actually the bug at <a href="https://github.com/facebook/react-native/blob/56fef9b6225ffc1ba87f784660eebe842866c57d/Libraries/Network/FormData.js#L68:">this place</a>.</p>
+</div>
+<div class="paragraph">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">var fd = FormData();
+
+fd.append('foo', 'bar'); // works
+fd.append('image', {uri: 'file:///'}); // works
+
+fd.append('number', 1); // EXCEPTION
+fd.append('boolean', true); // EXCEPTION</code></pre>
+</div>
+</div>
+</div>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/31961?v=3)"><span class="hidden">Aleksei Androsov's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="">Aleksei Androsov</a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">Russia</span>
+                    
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=FormData%20in%20React%20Native&amp;url=http://doochik.com/2015/11/27/FormData-in-React-Native.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://doochik.com/2015/11/27/FormData-in-React-Native.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://doochik.com/2015/11/27/FormData-in-React-Native.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+        <section class="post-comments">
+          <div id="disqus_thread"></div>
+          <script type="text/javascript">
+          var disqus_shortname = 'doochikcom'; // required: replace example with your forum shortname
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </section>
+
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="http://doochik.com">Aleksei Androsov</a> &copy; 2015</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//doochik.com/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//doochik.com/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-70745749-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+</body>
+</html>
