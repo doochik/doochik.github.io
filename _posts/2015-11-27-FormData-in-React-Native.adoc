@@ -2,10 +2,10 @@
 
 :hp-tags: react, react-native, formdata
 
-There are 2 things that I actually don't know unread read FormData implementation.
+There are 2 things that I actually don't know until read FormData implementation.
 
 ## Image uploading
-Yes, you can upload images! I used link:https://github.com/booxood/react-native-file-upload:[react-native-file-upload] until discovered how to use FormData in this case.
+Yes, you can upload images! I've used link:https://github.com/booxood/react-native-file-upload:[react-native-file-upload] until discovered how to use FormData in this case.
 
 link:https://developer.mozilla.org/en-US/docs/Web/API/FormData:[Using FormData in browser] in very simple. For example, we have an `input`. So we need just append `File` object to FormData.
 
