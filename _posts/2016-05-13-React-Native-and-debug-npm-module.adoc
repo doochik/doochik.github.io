@@ -1,2 +1,3 @@
 # React Native and "debug" npm module
 
+:hp-tags: react, react-native, debug, es6
